@@ -13,8 +13,11 @@ switch ($_POST["phase"]) {
   // (C) VALIDATION PART 2 - CHECKS & PROCESS
   case "b":
     $id = $_POST["id"];
-    $saved = unserialize(file_get_contents(getFileForUser($id)));
-    if ($saved->credentialId !== $id) { exit("Invalid credentials"); }
+    $file = getFileForUser($id);
+    if (!file_exists($file)) { exit("Invalid credentials"); }
+    $saved = unserialize(file_get_contents($file));
+    if ($saved->credentialId !== base64_decode($id)) { exit("Invalid credentials"); }
+    
     try {
       $WebAuthn->processGet(
         base64_decode($_POST["client"]),
