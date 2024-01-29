@@ -8,7 +8,9 @@ fi
 
 #Create the directory for the scripts
 mkdir /var/www/usr/webauthn
+mkdir /var/www/usr/webauthn/config
 mkdir /var/www/usr/webauthn/keys
+mkdir /var/www/usr/webauthn/logs
 
 chown -R www:www /var/www/usr/webauthn
 chmod -R 700 /var/www/usr/webauthn

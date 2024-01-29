@@ -1,46 +1,90 @@
-# Getting Started with Create React App
+# Installation Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Prerequisites
+- [Node.js](https://nodejs.org/en/) (v20.11.0 or later)
 
-## Available Scripts
 
-In the project directory, you can run:
+## Installation
+1. Clone the repository
+2. Navigate to the root directory of the project
+3. Run `npm install` to install all dependencies
+4. Run `npm build` to build the project
+5. Copy the contents of the `build` folder to the root directory of your web server e.g. `/var/www/htdocs/www`
+6. Change the config file `/etc/httpd.conf`. Example:
+    ```
+    server "default" {
+        listen on * port 80
+        listen on * tls port 443
 
-### `npm start`
+        # Optional, but probably best - change your syslog.conf to do
+        # what you want with it then.
+        # log syslog
+        log access "error.log"
+        log error "error.log"
+        log style forwarded
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+        tls {
+            key "/etc/ssl/private/server.key"
+            certificate "/etc/ssl/server.crt"
+        }
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+        location "/api/*.php" {
+            fastcgi socket "/run/php-fpm.sock"
+        }
 
-### `npm test`
+	    location "/static/*" {
+	        directory auto index
+        }
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+        #Enable the register Side
+        location "/register" { 
+            request strip 1
+        }
 
-### `npm run build`
+	root "/htdocs/www/"
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    }
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    # Include MIME types instead of the built-in ones
+    types {
+        include "/usr/share/misc/mime.types"
+        # Necessary to ensure patch files show up as text not binary
+        text/plain sig
+    }
+    ```
+7. Change the setting inside the `public/api/init.php` file to match the domain of the web server
+8. Run the `install.sh` script from the scripts folder to create the required folders with the correct permissions
+9. Restart the web server e.g. `doas rcctl restart httpd`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Folder Structure
+```
+/var/www/.
+├── htdocs
+│   └── www
+│       └── (contents of build folder)
+├── logs
+└── usr
+    └── webauthn
+        ├── config
+        ├── keys
+        └── logs
+```
 
-### `npm run eject`
+## Required OS (Client)
+- Windows 11 (23H2)
+- macOS 13 (Ventura)
+- Linux (Only supported inside a browser)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Android 9 (Pie) or later
+- iOS 16 (Apple Devices only)
+- iOS 17 (all devices)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+https://www.passkeys.io/compatible-devices
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## SSH Port Forwarding (Local Testing without an vaild SSL Certificate)
+Run `ssh -L 8080:localhost:80 user@server` to vorward the port 80 from the server to the local port 8080 (https://localhost:8080)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Registering a new User
+1. Navigate to the register page of the web server e.g. `https://localhost:8080/register`
+2. Enter an username and a Display Name
+3. Click on the `Register` button
