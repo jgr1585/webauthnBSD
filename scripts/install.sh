@@ -13,4 +13,6 @@ mkdir /var/www/usr/webauthn/keys
 mkdir /var/www/usr/webauthn/logs
 
 chown -R www:www /var/www/usr/webauthn
-chmod -R 700 /var/www/usr/webauthn
+chmod -R 440 /var/www/usr/webauthn
+chmod -R 640 /var/www/usr/webauthn/keys
+chmod -R 640 /var/www/usr/webauthn/logs
