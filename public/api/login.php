@@ -28,6 +28,15 @@ switch ($_POST["phase"]) {
       );
       echo "OK";
       // DO WHATEVER IS REQUIRED AFTER VALIDATION
+
+      $ip = $_SERVER['REMOTE_ADDR'];
+      $timestamp = date('Y-m-d\TH:i:s.Z\Z', time());
+
+      $openLogFile = fopen($logFile, "a");
+      fwrite($openLogFile, "$timestamp;$ip;1\n");
+      fclose($openLogFile);
+
+
     } catch (Exception $ex) { echo "ERROR - "; print_r($ex); }
     break;
 }

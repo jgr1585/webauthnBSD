@@ -5,6 +5,7 @@ use Ramsey\Uuid\Uuid;
 // Configuration
 $dataFolder = "/usr/webauthn";
 $keyStorage = "$dataFolder/keys";
+$logFile = "$dataFolder/logs/webauthn.log";
 
 // RELYING PARTY - CHANGE TO YOUR OWN!
 $rp = [

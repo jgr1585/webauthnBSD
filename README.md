@@ -3,6 +3,9 @@
 ## Prerequisites
 - [Node.js](https://nodejs.org/en/) (v20.11.0 or later)
 
+### OpenBSD (Server)
+- PHP (v8.2.15 or later)
+
 
 ## Installation
 1. Clone the repository
@@ -99,12 +102,12 @@ To create a new virtual authenticator to make testing easier. This is not requir
 - Supports large blobs: (optional)
 
 ## Log File Structure
-Timestamp in UTC;Username;IP-Address (v4/v6);Login/Logout Boolen (1-Login, 0-Logout)
+Timestamp in UTC;IP-Address (v4/v6);Login/Logout Boolen (1-Login, 0-Logout)
 
 Example:
 ```
-2023-12-31T12:00:00Z;jon.doe#1;10.0.0.2;1
-2023-12-31T13:00:00Z;jon.doe#2;fe80::1;1
-2023-12-31T14:00:00Z;jon.doe#1;10.0.0.2;0
-2023-12-31T15:00:00Z;jon.doe#2;fe80::1;0
+2023-12-31T12:00:00Z;10.0.0.2;1
+2023-12-31T13:00:00Z;fe80::1;1
+2023-12-31T14:00:00Z;10.0.0.2;0
+2023-12-31T15:00:00Z;fe80::1;0
 ```
