@@ -8,7 +8,7 @@ switch ($_POST["phase"]) {
   case "a":
     $args = $WebAuthn->getCreateArgs(
       Uuid::uuid4(), $_POST["username"], $_POST["displayName"],
-      30, false, true
+      30, true, true
     );
     $_SESSION["challenge"] = ($WebAuthn->getChallenge())->getBinaryString();
     echo json_encode($args);

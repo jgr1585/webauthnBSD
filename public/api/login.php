@@ -5,7 +5,7 @@ require "init.php";
 switch ($_POST["phase"]) {
   // (B) VALIDATION PART 1 - GET ARGUMENTS
   case "a":
-    $args = $WebAuthn->getGetArgs([], 30);
+    $args = $WebAuthn->getGetArgs([], 30, true, true);
     $_SESSION["challenge"] = ($WebAuthn->getChallenge())->getBinaryString();
     echo json_encode($args);
     break;
