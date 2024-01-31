@@ -29,5 +29,18 @@ export const helper = {
       .then(res => res.text())
       .then(res => after(res))
       .catch(err => { alert("ERROR!"); console.error(err); });
+    },
+
+    base64ToBlob: (base64String: string, contentType = 'text/plan') => {
+      const byteCharacters = atob(base64String);
+      const byteArrays = [];
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+          byteArrays.push(byteCharacters.charCodeAt(i));
+      }
+
+      const byteArray = new Uint8Array(byteArrays);
+      return new Blob([byteArray], { type: contentType });
     }
+  
   };

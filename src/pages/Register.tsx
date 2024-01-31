@@ -4,7 +4,7 @@ import { isWebAuthnSupported, register } from "../tools/Webauth";
 export default function Register() {
     const randomNumber = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
     const [username, setUsername] = useState("jon.doe#" + randomNumber);
-    const [displayName, setDisplayName] = useState("Jon Doe #" + randomNumber);   
+    const [displayName, setDisplayName] = useState("Jon Doe #" + randomNumber);
 
     if (!isWebAuthnSupported) {
         alert("WebAuthn is not supported");

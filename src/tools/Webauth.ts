@@ -46,7 +46,20 @@ function sendRegisterCredentials(cred: any) {
         transport : cred.response.getTransports ? cred.response.getTransports() : null,
         client : cred.response.clientDataJSON ? helper.atb(cred.response.clientDataJSON) : null,
         attest : cred.response.attestationObject ? helper.atb(cred.response.attestationObject) : null
-    }, res => alert(res))
+    }, data => {
+        let res = JSON.parse(data);
+        if (res.status === "Download") {
+            let url = window.URL.createObjectURL(helper.base64ToBlob(res.content));
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = res.filename;
+            document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+            a.click();    
+            a.remove();  //afterwards we remove the element again   
+        } else {
+            alert(res.status);
+        }
+    })
 }
 
 function sendLoginCredentials(cred: any) {
