@@ -39,11 +39,6 @@
 	        directory auto index
         }
 
-        #Enable the register Side
-        location "/register" { 
-            request strip 1
-        }
-
 	root "/htdocs/www/"
 
     }

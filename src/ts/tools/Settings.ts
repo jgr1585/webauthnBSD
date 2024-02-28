@@ -1,4 +1,6 @@
-export default {};
+const settings = {};
+
+export default settings;
 
 export function fetchAllowRegistration() {
     return fetchSettings<boolean>('allowRegistration');
