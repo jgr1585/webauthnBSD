@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define the name of the self-extracting archive
-output_file="webauthn-$VERSION.run"
+output_file="webauthn.run"
 
 # Create the self-extracting script
 cat > "$output_file" << 'EOF'
@@ -19,7 +19,7 @@ trap "rm -rf $temp_dir" EXIT
 
 # Extract files into the temporary directory
 ARCHIVE=`awk '/^__ARCHIVE_BELOW__/ {print NR + 1; exit 0; }' "$0"`
-tail -n+$ARCHIVE "$0" | tar -xz -C "$temp_dir"
+tail -n+$ARCHIVE "$0" | tar -xf -C "$temp_dir"
 
 # Run install script
 cd "$temp_dir"
@@ -34,7 +34,7 @@ __ARCHIVE_BELOW__
 EOF
 
 # Append the contents of the current directory to the script
-tar cz . >> "$output_file"
+tar cf - . | xz -9e -c - >> "$output_file"
 
 # Make the script executable
 chmod +x "$output_file"

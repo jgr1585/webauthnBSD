@@ -1,0 +1,61 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-package:
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build
+      run: |
+        npm install
+        npx webpack --mode=production
+
+    - name: Packages
+      run: |
+        cp -r ./build/ ./scripts
+        cd ./scripts
+        ./compress.sh
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: webauthn
+        path: ./scripts/webauthn.run
+
+  release-package:
+    needs: build-package
+    runs-on: self-hosted
+
+    steps:
+    - name: Download
+      uses: actions/download-artifact@v4
+      with:
+        name: webauthn
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+    
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./webauthn.run
+        asset_name: webauthn-${{ github.run_number }}.run
+        asset_content_type: application/octet-stream
