@@ -66,6 +66,15 @@
         ├── config
         ├── keys
         └── logs
+
+/opt
+└── webauthn
+    ├── cron.sh
+    └── pfFileHandler.sh
+
+/etc/opt
+└── webauthn
+    └── config.conf
 ```
 
 ## Required OS (Client)
