@@ -6,6 +6,12 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Check if build directory exists
+if [ -d "./build" ]; then
+   mkdir -p /var/www/htdocs/webauthn
+   cp -r build/* /var/www/htdocs/webauthn
+fi
+
 #Create the directory for the scripts
 mkdir /var/www/usr/webauthn
 mkdir /var/www/usr/webauthn/config
@@ -24,7 +30,11 @@ mkdir -p /opt/webauthn
 cp scripts/cron.sh /opt/webauthn
 cp scripts/pfFileHandler.sh /opt/webauthn
 
+chmod -R 555 /opt/webauthn
+
 #Copy the configuration file to the directory
 mkdir -p /etc/opt/webauthn
 
 cp config.conf /etc/opt/webauthn
+
+chmod 777 /etc/opt/webauthn/config.conf
