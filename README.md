@@ -96,7 +96,7 @@ crontab -e
             directory auto index
         }
 
-    root "/htdocs/www/"
+    root "/htdocs/webauth/"
 
     }
 
