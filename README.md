@@ -6,50 +6,41 @@
 ### OpenBSD (Server)
 - PHP (v8.2.15 or later)
 
+### Installation
+1. Download the latest release and run it
+```bash
+curl -O https://github.com/jgr1585/webauthnBSD/releases/latest/download/webauthn.run
+chmod +x webauthn.run
+./webauthn.run
+```
+2. Configer the web server with `/etc/httpd.conf` [Example](#etchttpdconf)
+3. Add the cron job to the crontab
+```bash
+crontab -e
+```
+```bash
+# Run the cleanup script every day at 00:05
+5 0 * * * /opt/webauthn/cron.sh
+```
+4. Configure pf to block all traffic to the port 8080 and 22 except if the ip address is in the whitelist 'webauthn' in the `/etc/pf.conf` file
+```pf
+    block in quick from any to any port { 8080, 22 }
 
-## Installation
+    table <webauthn> persist
+    pass in quick from <webauthn> to any port { 8080, 22 }
+```
+5. Reload the pf rules (as root)
+```bash
+    pfctl -f /etc/pf.conf
+```
+
+## Build from Source
 1. Clone the repository
 2. Navigate to the root directory of the project
 3. Run `npm install` to install all dependencies
 4. Run `npm build` to build the project
 5. Copy the contents of the `build` folder to the root directory of your web server e.g. `/var/www/htdocs/www`
-6. Change the config file `/etc/httpd.conf`. Example:
-    ```
-    server "default" {
-        listen on * port 80
-        listen on * tls port 443
-
-        # Optional, but probably best - change your syslog.conf to do
-        # what you want with it then.
-        # log syslog
-        log access "error.log"
-        log error "error.log"
-        log style forwarded
-
-        tls {
-            key "/etc/ssl/private/server.key"
-            certificate "/etc/ssl/server.crt"
-        }
-
-        location "/api/*.php" {
-            fastcgi socket "/run/php-fpm.sock"
-        }
-
-	    location "/static/*" {
-	        directory auto index
-        }
-
-	root "/htdocs/www/"
-
-    }
-
-    # Include MIME types instead of the built-in ones
-    types {
-        include "/usr/share/misc/mime.types"
-        # Necessary to ensure patch files show up as text not binary
-        text/plain sig
-    }
-    ```
+6. Change the config file `/etc/httpd.conf`. [Example](#etchttpdconf)
 7. Change the setting inside the `public/api/init.php` file to match the domain of the web server
 8. Run the `install.sh` script from the scripts folder to create the required folders with the correct permissions
 9. Restart the web server e.g. `doas rcctl restart httpd`
@@ -75,6 +66,46 @@
 /etc/opt
 └── webauthn
     └── config.conf
+```
+
+## Exapmles
+
+### '/etc/httpd.conf'
+```c
+    server "default" {
+        listen on * port 80
+        listen on * tls port 443
+
+        # Optional, but probably best - change your syslog.conf to do
+        # what you want with it then.
+        # log syslog
+        log access "error.log"
+        log error "error.log"
+        log style forwarded
+
+        tls {
+            key "/etc/ssl/private/server.key"
+            certificate "/etc/ssl/server.crt"
+        }
+
+        location "/api/*.php" {
+            fastcgi socket "/run/php-fpm.sock"
+        }
+
+        location "/static/*" {
+            directory auto index
+        }
+
+    root "/htdocs/www/"
+
+    }
+
+    # Include MIME types instead of the built-in ones
+    types {
+        include "/usr/share/misc/mime.types"
+        # Necessary to ensure patch files show up as text not binary
+        text/plain sig
+    }
 ```
 
 ## Required OS (Client)

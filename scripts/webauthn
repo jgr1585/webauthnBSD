@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# PROVIDE: webauthn
+# REQUIRE: LOGIN
+# KEYWORD: nojail
+
+. /etc/rc.d/rc.subr
+
+name="webauthn"
+rcvar=$name
+command="/opt/webauthn/pfFileHandler.sh"
+
+load_rc_config $name
+run_rc_command "$1"

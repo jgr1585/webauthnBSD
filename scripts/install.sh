@@ -27,14 +27,23 @@ touch /var/www/usr/webauthn/logs/webauthn.log
 
 #Copy the scripts to the directory
 mkdir -p /opt/webauthn
-cp scripts/cron.sh /opt/webauthn
-cp scripts/pfFileHandler.sh /opt/webauthn
+cp ./cron.sh /opt/webauthn
+cp ./pfFileHandler.sh /opt/webauthn
 
 chmod -R 555 /opt/webauthn
 
 #Copy the configuration file to the directory
 mkdir -p /etc/opt/webauthn
 
-cp config.conf /etc/opt/webauthn
+cp ./config.conf /etc/opt/webauthn
 
 chmod 777 /etc/opt/webauthn/config.conf
+
+#Copy the rc.d script to the directory
+cp ./webauthn /etc/rc.d/webauthn
+
+chmod 555 /etc/rc.d/webauthn
+
+#Enable the service
+rcctl enable webauthn
+rcctl start webauthn
