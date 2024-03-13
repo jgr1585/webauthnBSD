@@ -19,7 +19,7 @@ trap "rm -rf $temp_dir" EXIT
 
 # Extract files into the temporary directory
 ARCHIVE=`awk '/^__ARCHIVE_BELOW__/ {print NR + 1; exit 0; }' "$0"`
-tail -n+$ARCHIVE "$0" | tar -xf -C "$temp_dir"
+tail -n+$ARCHIVE "$0" | xz -d | tar -xf - -C "$temp_dir"
 
 # Run install script
 cd "$temp_dir"

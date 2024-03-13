@@ -9,7 +9,7 @@
 ### Installation
 1. Download the latest release and run it
 ```bash
-curl -O https://github.com/jgr1585/webauthnBSD/releases/latest/download/webauthn.run
+curl -LO https://github.com/jgr1585/webauthnBSD/releases/latest/download/webauthn.run
 chmod +x webauthn.run
 ./webauthn.run
 ```
@@ -22,7 +22,7 @@ crontab -e
 # Run the cleanup script every day at 00:05
 5 0 * * * /opt/webauthn/cron.sh
 ```
-4. Configure pf to block all traffic to the port 8080 and 22 except if the ip address is in the whitelist 'webauthn' in the `/etc/pf.conf` file
+4. Configure pf to block all traffic to the administative port (e.g. 8080 and 22) except if the ip address is in the whitelist 'webauthn' in the `/etc/pf.conf` file
 ```pf
     block in quick from any to any port { 8080, 22 }
 
@@ -73,7 +73,6 @@ crontab -e
 ### '/etc/httpd.conf'
 ```c
     server "default" {
-        listen on * port 80
         listen on * tls port 443
 
         # Optional, but probably best - change your syslog.conf to do
