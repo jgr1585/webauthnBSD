@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Load the configuration file
-. /etc/opt/config.conf
+. /etc/opt/webauthn/config.conf
 
 
-tail -n 0 -f /tmp/test | while read -r line; do
+tail -n 0 -f $LOG_PATH | while read -r line; do
 
     # Check for a valid Timestamp (ISO 8601)
     regexDate='[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9]Z'

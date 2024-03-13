@@ -1,14 +1,26 @@
-#!/bin/sh
+#!/bin/ksh
 #
 # PROVIDE: webauthn
 # REQUIRE: LOGIN
 # KEYWORD: nojail
+
+daemon="/bin/ksh /opt/webauthn/pfFileHandler.sh"
 
 . /etc/rc.d/rc.subr
 
 name="webauthn"
 rcvar=$name
 command="/opt/webauthn/pfFileHandler.sh"
+command_interpreter="/bin/ksh"
+pidfile="/var/run/webauthn.pid"
 
-load_rc_config $name
-run_rc_command "$1"
+
+rc_configtest() {
+    if [ ! -f /etc/opt/webauthn/config.conf ]; then
+        echo "Configuration file not found"
+        return 1
+    fi
+    return 0
+}
+
+rc_cmd $1
