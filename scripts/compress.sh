@@ -33,8 +33,11 @@ exit
 __ARCHIVE_BELOW__
 EOF
 
+# Get the script's filename
+script_name=$(basename "$0")
+
 # Append the contents of the current directory to the script
-tar cf - . | xz -9e -c - >> "$output_file"
+tar cf - --exclude="$script_name" . | xz -9e -c - >> "$output_file"
 
 # Make the script executable
 chmod +x "$output_file"

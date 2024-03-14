@@ -14,24 +14,37 @@ chmod +x webauthn.run
 ./webauthn.run
 ```
 2. Configer the web server with `/etc/httpd.conf` [Example](#etchttpdconf)
-3. Add the cron job to the crontab
+
+3. Configure the config file `/var/www/htdocs/webauthn/api/init.php` to match the domain of the web server.
+
+4. Add the cron job to the crontab
 ```bash
 crontab -e
 ```
 ```bash
+# Run the pfFileHandler script at reboot
+@reboot             /opt/webauthn/pfFileHandler.sh
 # Run the cleanup script every day at 00:05
-5 0 * * * /opt/webauthn/cron.sh
+5   0   *   *   *   /opt/webauthn/cron.sh
 ```
-4. Configure pf to block all traffic to the administative port (e.g. 8080 and 22) except if the ip address is in the whitelist 'webauthn' in the `/etc/pf.conf` file
-```pf
-    block in quick from any to any port { 8080, 22 }
 
-    table <webauthn> persist
-    pass in quick from <webauthn> to any port { 8080, 22 }
+5. Configure pf to block all traffic to the administative port (e.g. 8080 and 22) except if the ip address is in the whitelist 'webauthn' in the `/etc/pf.conf` file
+```pf
+table <webauthn> persist
+pass in quick proto tcp from <webauthn> to any port { 8080, 22 }
+pass in quick proto udp from <webauthn> to any port { 8080, 22 }
+
+block in quick proto tcp from any to any port { 8080, 22 }
+block in quick proto udp from any to any port { 8080, 22 }
 ```
-5. Reload the pf rules (as root)
+
+6. Load the new config and start all services
 ```bash
     pfctl -f /etc/pf.conf
+    rcctl enable httpd
+    rcctl restart httpd
+    rcctl restart cron
+    rcctl restart php82_fpm
 ```
 
 ## Build from Source
@@ -95,7 +108,7 @@ crontab -e
             directory auto index
         }
 
-    root "/htdocs/webauth/"
+    root "/htdocs/webauthn/"
 
     }
 

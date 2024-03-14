@@ -18,12 +18,12 @@ mkdir /var/www/usr/webauthn/config
 mkdir /var/www/usr/webauthn/keys
 mkdir /var/www/usr/webauthn/logs
 
+touch /var/www/usr/webauthn/logs/webauthn.log
+
 chown -R www:www /var/www/usr/webauthn
 chmod -R 550 /var/www/usr/webauthn
 chmod -R 770 /var/www/usr/webauthn/keys
 chmod -R 770 /var/www/usr/webauthn/logs
-
-touch /var/www/usr/webauthn/logs/webauthn.log
 
 #Copy the scripts to the directory
 mkdir -p /opt/webauthn
@@ -39,11 +39,12 @@ cp ./config.conf /etc/opt/webauthn
 
 chmod 777 /etc/opt/webauthn/config.conf
 
-#Copy the rc.d script to the directory
-cp ./webauthn /etc/rc.d/webauthn
+#Copy httpd.conf to /etc/httpd.conf if it does not exist
+if [ ! -f /etc/httpd.conf ]; then
+   cp ./httpd.conf /etc/httpd.conf
 
-chmod 555 /etc/rc.d/webauthn
-
-#Enable the service
-rcctl enable webauthn
-rcctl start webauthn
+   #Generate a self-signed certificate if it does not exist
+   if [ ! -f /etc/ssl/private/webauthn.key ] && [ ! -f /etc/ssl/webauthn.crt ]; then
+      openssl req -x509 -newkey rsa:4096 -keyout /etc/ssl/private/webauthn.key -out /etc/ssl/webauthn.crt -days 365 -nodes -subj "/C=AT/ST=Voralber/L=Dornbirn/CN=webauthn.local"
+   fi
+fi
