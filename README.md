@@ -1,12 +1,9 @@
 # Installation Guide
 
-## Prerequisites
-- [Node.js](https://nodejs.org/en/) (v20.11.0 or later)
-
-### OpenBSD (Server)
+## OpenBSD (Server)
 - PHP (v8.2.15 or later)
 
-### Installation
+## Installation
 1. Download the latest release and run it
 ```bash
 curl -LO https://github.com/jgr1585/webauthnBSD/releases/latest/download/webauthn.run
@@ -48,6 +45,10 @@ rcctl restart php82_fpm
 ```
 
 ## Build from Source
+
+### Prerequisites
+- [Node.js](https://nodejs.org/en/) (v20.11.0 or later)
+
 1. Clone the repository
 2. Navigate to the root directory of the project
 3. Run `npm install` to install all dependencies
