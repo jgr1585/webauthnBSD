@@ -19,14 +19,7 @@ tail -n 0 -f $LOG_PATH | while read -r line; do
     echo "$line" | grep -Eq "^$regexDate;($regexIPv4)|($regexIPv6);$regexLogin$" || continue
 
     printf "%s\n" "$line" | while IFS=';' read -r date ip login; do
-
-        echo "Field 1: $date"
-        echo "Field 2: $ip"
-        echo "Field 3: $login"
-        # Additional processing for other fields if needed
-
         pfctl -q -t $TABLE_NAME -T add $ip
-        
         # Refresh the config file
         pfctl -q -f /etc/pf.conf
     done
