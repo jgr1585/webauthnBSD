@@ -40,11 +40,11 @@ block in quick proto udp from any to any port { 8080, 22 }
 
 6. Load the new config and start all services
 ```bash
-    pfctl -f /etc/pf.conf
-    rcctl enable httpd
-    rcctl restart httpd
-    rcctl restart cron
-    rcctl restart php82_fpm
+pfctl -f /etc/pf.conf
+rcctl enable httpd
+rcctl restart httpd
+rcctl restart cron
+rcctl restart php82_fpm
 ```
 
 ## Build from Source
@@ -85,39 +85,39 @@ block in quick proto udp from any to any port { 8080, 22 }
 
 ### '/etc/httpd.conf'
 ```c
-    server "default" {
-        listen on * tls port 443
+server "default" {
+    listen on * tls port 443
 
-        # Optional, but probably best - change your syslog.conf to do
-        # what you want with it then.
-        # log syslog
-        log access "error.log"
-        log error "error.log"
-        log style forwarded
+    # Optional, but probably best - change your syslog.conf to do
+    # what you want with it then.
+    # log syslog
+    log access "error.log"
+    log error "error.log"
+    log style forwarded
 
-        tls {
-            key "/etc/ssl/private/server.key"
-            certificate "/etc/ssl/server.crt"
-        }
-
-        location "/api/*.php" {
-            fastcgi socket "/run/php-fpm.sock"
-        }
-
-        location "/static/*" {
-            directory auto index
-        }
-
-    root "/htdocs/webauthn/"
-
+    tls {
+        key "/etc/ssl/private/server.key"
+        certificate "/etc/ssl/server.crt"
     }
 
-    # Include MIME types instead of the built-in ones
-    types {
-        include "/usr/share/misc/mime.types"
-        # Necessary to ensure patch files show up as text not binary
-        text/plain sig
+    location "/api/*.php" {
+        fastcgi socket "/run/php-fpm.sock"
     }
+
+    location "/static/*" {
+        directory auto index
+    }
+
+root "/htdocs/webauthn/"
+
+}
+
+# Include MIME types instead of the built-in ones
+types {
+    include "/usr/share/misc/mime.types"
+    # Necessary to ensure patch files show up as text not binary
+    text/plain sig
+}
 ```
 
 ## Required OS (Client)
