@@ -68,7 +68,6 @@ rcctl restart php82_fpm
 ├── logs
 └── usr
     └── webauthn
-        ├── config
         ├── keys
         └── logs
 

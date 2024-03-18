@@ -14,7 +14,6 @@ fi
 
 #Create the directory for the scripts
 mkdir /var/www/usr/webauthn
-mkdir /var/www/usr/webauthn/config
 mkdir /var/www/usr/webauthn/keys
 mkdir /var/www/usr/webauthn/logs
 
